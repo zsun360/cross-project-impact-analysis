@@ -1,0 +1,54 @@
+{
+  "name": "impact-analysis-client",
+  "description": "Impact analysis Client.",
+  "author": "Zhenshuo Sun",
+  "license": "MIT",
+  "version": "0.0.1",
+  "publisher": "cross-project-impact-analysis-vscode",
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "impact.exportGraphPng",
+        "title": "Impact: Export Graph (PNG)"
+      },
+      {
+        "command": "impact.runAnalysis",
+        "title": "Run Analysis",
+        "category": "Impact"
+      }
+    ]
+  },
+  "configuration": {
+    "properties": {
+      "impact.maxFiles": {
+        "type": "number",
+        "default": 200,
+        "description": "Maximum files to analyze in Stage05."
+      }
+    }
+  },
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "dependencies": {
+    "glob": "^11.0.0",
+    "vscode-languageclient": "^9.0.1",
+    "chalk": "^5.6.2"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.100.0",
+    "@vscode/test-electron": "^2.3.9"
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile",
+    "test": "node ./out/test/runTest.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zsun360/Cross-Project-Impact-Analysis-VS-Code-Extension"
+  }
+}

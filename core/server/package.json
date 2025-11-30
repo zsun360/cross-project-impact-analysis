@@ -1,0 +1,31 @@
+{
+  "name": "impact-analysis-server",
+  "description": "Impact analysis Server.",
+  "version": "1.0.0",
+  "author": "Zhenshuo Sun",
+  "license": "MIT",
+  "private": true,
+  "main": "./out/server.js",
+  "engines": {
+    "node": "*"
+  },
+  "dependencies": {
+    "vscode-languageserver": "^9.0.1",
+    "vscode-languageserver-textdocument": "^1.0.11",
+    "fast-glob": "^3.3.3",
+    "ts-morph": "^26.0.0",
+    "chalk": "^5.6.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2",
+    "@types/node": "^22"
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -w -p ./"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zsun360/Cross-Project-Impact-Analysis-VS-Code-Extension"
+  }
+}

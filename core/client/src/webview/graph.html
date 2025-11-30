@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; img-src {{cspSource}} data:; script-src {{cspSource}}; style-src {{cspSource}} 'unsafe-inline'; font-src {{cspSource}};"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Impact — Import Graph</title>
+    <style>
+      html,
+      body,
+      #cy {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+      /* 如果有外层容器（如 #root / .container），也一起拉满 */
+      #root,
+      .container {
+        height: 100%;
+        width: 100%;
+      }
+      /* 默认（浅色） */
+      body.vscode-light #cy {
+        background: #ffffff;
+      }
+      body.vscode-light .toolbar {
+        background: #1112;
+        color: #222;
+      }
+      /* 深色 */
+      body.vscode-dark #cy {
+        background: #1e1e1e;
+      }
+      body.vscode-dark .toolbar {
+        background: #1118;
+        color: #fff;
+      }
+
+      /* 高对比度 */
+      body.vscode-high-contrast #cy {
+        background: canvas;
+      }
+      .toolbar {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        background: #1118;
+        color: #fff;
+        padding: 6px 8px;
+        border-radius: 8px;
+        font-family: sans-serif;
+        font-size: 12px;
+        z-index: 10;
+      }
+
+      /* impact-tooltip.css */
+      .impact-tooltip {
+        position: fixed;
+        padding: 4px 8px;
+        font-size: 11px;
+        color: #ffffff;
+        background: rgba(10, 10, 10, 0.9);
+        border-radius: 4px;
+        pointer-events: none;
+        z-index: 999;
+        display: none;
+        max-width: 420px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+      }
+    </style>
+  </head>
+  <body>
+    <!--
+    <div class="toolbar">
+      <span id="stage-title"
+        >Cross-Project Impact Analysis — Interactive Visualization</span
+      >
+      <span
+        id="stage-stats"
+        style="margin-left: 12px; opacity: 0.8; font-size: 12px"
+      ></span>
+    </div>
+    -->
+    <div id="impact-header">
+      <span id="impact-title"></span>
+      <span id="impact-meta"></span>
+    </div>
+    <div id="cy"></div>
+    <div class="fallback" id="fb">loading…</div>
+    <!-- Local, packaged scripts -->
+    <script src="{{cytoJsUri}}"></script>
+    <script src="{{graphJsUri}}"></script>
+  </body>
+</html>
