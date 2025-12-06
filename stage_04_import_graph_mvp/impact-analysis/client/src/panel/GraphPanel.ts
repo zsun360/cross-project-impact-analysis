@@ -79,6 +79,8 @@ export class GraphPanel {
 
     // Handle messages from the webview
     this.panel.webview.onDidReceiveMessage(async (msg) => {
+      console.log("Received from webview:", msg);
+      vscode.window.showInformationMessage("got message: " + msg.type);
       switch (msg?.type) {
         case 'ready':
           this._readyResolve();
@@ -114,7 +116,7 @@ export class GraphPanel {
             filters: kind === 'png' ? { PNG: ['png'] } : { SVG: ['svg'] },
             saveLabel: 'Save Graph'
           });
-          if (!uri) break;
+          if (!uri) {break;}
 
           if (kind === 'png') {
             // data:image/png;base64,XXXXX
@@ -128,7 +130,21 @@ export class GraphPanel {
           vscode.window.showInformationMessage('Graph exported.');
           break;
         }
+        case 'export:edges':{
+           this.output.appendLine(`[Webview] ${JSON.stringify(msg.payload)}`);
+           const edges = msg.payload;
+           const saveUri = await vscode.window.showSaveDialog({
+            filters: {"JSON": ["json"]},
+            saveLabel: "Export Dependency Edges JSON"
+           });
+ 
+          if (!saveUri) {return;}
 
+          fs.writeFileSync(saveUri.fsPath, JSON.stringify(edges, null, 2), "utf-8");
+
+          vscode.window.showInformationMessage(`Exported ${edges.length} edges to ${saveUri.fsPath}`);  
+          break;
+        }
         case 'log':
           if (msg?.payload?.message) {
             this.output.appendLine(`[Webview] ${msg.payload.message}`);
@@ -152,7 +168,7 @@ export class GraphPanel {
     GraphPanel.current = undefined;
     while (this.disposables.length) {
       const d = this.disposables.pop();
-      if (d) d.dispose();
+      if (d) {d.dispose();}
     }
   }
 }

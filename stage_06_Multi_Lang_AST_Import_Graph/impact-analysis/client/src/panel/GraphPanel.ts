@@ -131,7 +131,26 @@ export class GraphPanel {
           vscode.window.showInformationMessage('Graph exported.');
           break;
         }
+        case 'export:edges': {
+          vscode.window.showInformationMessage(
+            "Exported " + msg.payload.length + " edges"
+          );
 
+          // optional: save to file
+          const uri = await vscode.window.showSaveDialog({
+            filters: { JSON: ["json"] },
+            saveLabel: "Save Dependency edges JSON"
+          });
+
+          if (uri) {
+            await vscode.workspace.fs.writeFile(
+              uri,
+              Buffer.from(JSON.stringify(msg.payload, null, 2))
+            );
+            vscode.window.showInformationMessage("Saved to: " + uri.fsPath);
+          }
+          break;
+        }
         case 'log':
           if (msg?.payload?.message) {
             this.output.appendLine(`[Webview] ${msg.payload.message}`);

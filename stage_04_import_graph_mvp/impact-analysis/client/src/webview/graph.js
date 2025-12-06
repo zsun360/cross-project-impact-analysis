@@ -1,6 +1,8 @@
 (function () {
   const vscode = acquireVsCodeApi();
+  console.log("vscode api:", vscode);
   const state = { cy: null };
+  window.__STATE__ = state;
 
   const titleEl = document.getElementById("stage-title");
   const statsEl = document.getElementById("stage-stats");
@@ -213,6 +215,27 @@
     if (type === "export:svg") {
       exportBlob("svg");
     }
+  });
+
+  function bindExportButton() {
+    const btn = document.getElementById("export-json");
+    if (!btn) {
+      return;
+    }
+
+    btn.addEventListener("click", () => {
+      console.log("[webview] button clicked!");
+      console.log(state.cy.edges());
+      const edges = state.cy.edges().map((e) => ({
+        source: e.data("source"),
+        target: e.data("target"),
+      }));
+      post("export:edges", edges);
+    });
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    bindExportButton();
   });
 
   post("ready");

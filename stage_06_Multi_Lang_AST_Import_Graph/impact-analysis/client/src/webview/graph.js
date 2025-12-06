@@ -17,6 +17,8 @@
   const titleEl = document.getElementById("stage-title");
   const statsEl = document.getElementById("stage-stats");
 
+  window.__STATE__ = state;
+
   // ---------- init once ----------
   function ensureInstance() {
     if (state.inited && state.cy) {
@@ -136,6 +138,11 @@
       lastNode = n;
     }
 
+    cy.on("layoutstop", () => {
+      console.log("[GLOBAL] layout finished");
+      window.__CY_READY__ = true;
+    });
+
     // 屏蔽原生右键菜单
     cy.container().addEventListener("contextmenu", (e) => e.preventDefault());
 
@@ -169,13 +176,13 @@
     function runLayout() {
       const t0 = performance.now();
       const layout = cy.layout({ name: "cose", animate: false });
-      layout.on("layoutstop", () => {
-        cy.resize();
-        cy.fit(undefined, 32);
-        cy.center();
-        log(`[metrics] relayout=${(performance.now() - t0).toFixed(1)} ms`);
-      });
+
       layout.run();
+      while (!window.__CY_READY__) {}
+      cy.resize();
+      cy.fit(undefined, 32);
+      cy.center();
+      log(`[metrics] relayout=${(performance.now() - t0).toFixed(1)} ms`);
     }
 
     // 键盘：按 R 重新布局（不区分大小写）
@@ -299,15 +306,12 @@
     // 布局 + 视野
     const tLayoutStart = performance.now();
     const layout = cy.layout({ name: "cose", animate: false });
-    layout.on("layoutstop", () => {
-      const tLayoutEnd = performance.now();
-      cy.resize();
-      cy.fit(undefined, 32);
-      cy.center();
-      log(`[metrics] layout=${(tLayoutEnd - tLayoutStart).toFixed(1)} ms`);
-    });
-    layout.run();
 
+    layout.run();
+    while (!window.__CY_READY__) {}
+    cy.resize();
+    cy.fit(undefined, 32);
+    cy.center();
     const t1 = performance.now();
     log(
       `[metrics] render(total)=${(t1 - t0).toFixed(1)} ms nodes=${
@@ -348,6 +352,25 @@
     if (type === "exportPNG" || type === "export:png") {
       exportPNG();
       return;
+    }
+  });
+
+  window.addEventListener("DOMContentLoaded", () => {
+    const btn = document.getElementById("export-json");
+    if (btn) {
+      btn.addEventListener("click", () => {
+        if (!window.__CY_READY__) {
+          console.log("Please wait… graph layout not finished.");
+          return;
+        }
+
+        const edges = state.cy.edges().map((e) => ({
+          source: e.data("source"),
+          target: e.data("target"),
+        }));
+
+        post("export:edges", edges);
+      });
     }
   });
 
