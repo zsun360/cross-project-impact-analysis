@@ -1,5 +1,8 @@
 import { Connection } from 'vscode-languageserver';
-import { Methods, RunParams, RunResult, SymbolGraphParams, SymbolGraphResult, SymbolNode, SymbolEdge } from './protocol';
+import { Methods, RunParams, RunResult, 
+  SymbolGraphParams, SymbolGraphResult, SymbolNode, SymbolEdge,
+  PredictRiskParams, PredictRiskResult } from './protocol';
+import {handlePredictRisk} from './analysis/predictRiskHandler';
 import { analyzeProject } from './analyzer';
 import { parseTSFile } from './parse_ts';
 import { parsePyFile } from './parse_py';
@@ -20,7 +23,7 @@ export function registerApi(connection: Connection) {
     }
   );
 
-  // --- NEW: 单文件符号图 ---
+  // --- NEW: sinle file symbol graph ---
   connection.onRequest<SymbolGraphResult, SymbolGraphParams>(
     Methods.SymbolGraph,
     async (params) => {
@@ -49,4 +52,10 @@ export function registerApi(connection: Connection) {
       return { file, nodes, edges, workspaceRoot: params.workspaceRoot };
     }
   );
+
+  connection.onRequest(
+    Methods.PredictRisk, 
+    async (params: PredictRiskParams): Promise<PredictRiskResult> => {
+      return handlePredictRisk(params);
+  });
 }

@@ -16,6 +16,10 @@
         "command": "impact.runAnalysis",
         "title": "Run Analysis",
         "category": "Impact"
+      },
+      {
+        "command": "impact.predictRiskForActiveFile",
+        "title": "Predict Risk For Active File"
       }
     ]
   },

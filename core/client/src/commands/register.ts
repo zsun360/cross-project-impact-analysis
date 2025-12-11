@@ -9,7 +9,8 @@ import {
 } from 'vscode';
 import * as path from 'path';
 
-import { Methods, RunParams, RunResult } from '../protocol';
+import { Methods, RunParams, RunResult, 
+  PredictRiskParams, PredictRiskResult } from '../protocol';
 import { getClient } from '../utils/lspClientApi';
 import { GraphPanel } from '../panel/GraphPanel';
 import { GraphModel } from '../types/graph';
@@ -118,6 +119,73 @@ export function registerCommands(
         }
 
         panel.exportPng();
+      }
+    )
+  );
+
+  context.subscriptions.push(
+    commands.registerCommand(
+      'impact.predictRiskForActiveFile',
+      async () => {
+        const client = getClient();
+        const editor = window.activeTextEditor;
+
+        if (!editor) {
+          window.showWarningMessage('No active editor.');
+          return;
+        }
+
+        const filePath = editor.document.uri.fsPath;
+        const folders = workspace.workspaceFolders;
+        if (!folders || folders.length == 0) {
+          window.showWarningMessage('No workspace folder found.');
+          return;
+        }
+        const workspaceRoot = folders[0].uri.fsPath;
+
+        const params: PredictRiskParams = {
+          workspaceRoot,
+          changedFiles: [filePath],
+        };
+
+        let result: PredictRiskResult;
+        try {
+          result = await client.sendRequest<PredictRiskResult>(
+            Methods.PredictRisk,
+            params,
+          );
+        } catch(err: unknown) {
+          const msg = err instanceof Error ? err.message : String(err);
+          window.showErrorMessage(
+            `Failed to run risk prediction: ${msg}`
+          );
+          return;
+        }
+
+        // Use OutputChannel to display the results
+        output.appendLine('');
+        output.appendLine(
+          `=== LLM Risk Prediction for ${path.basename(filePath)} ===`
+        );
+        for (const item of result.items) {
+          output.appendLine(`File: ${item.filePath}`);
+          output.appendLine(
+            ` Risk score: ${(item.riskScore * 100).toFixed(1)}%`,);
+          if (item.reasons.length > 0) {
+            output.appendLine('    Reasons:');
+            for (const r of item.reasons) {
+              output.appendLine(`    - ${r}`);
+            }
+          }
+          if (item.suggestedTests.length > 0) {
+            output.appendLine('    Suggested tests:');
+            for (const t of item.suggestedTests) {
+              output.appendLine(`    - ${t}`);
+            }
+          }
+          output.appendLine('');
+        }
+        output.show(true);
       }
     )
   );

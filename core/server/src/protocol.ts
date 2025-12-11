@@ -4,7 +4,24 @@ import type { ModuleIR } from './types/ir';
 export const Methods = {
   RunAnalysis: 'impact/runAnalysis',
   SymbolGraph: 'impact/symbolGraph',
+  PredictRisk: 'impact/predictRisk',
 } as const;
+
+export interface PredictRiskParams {
+  workspaceRoot?: string;
+  changedFiles: string[]; // Stage 1: We only pass one active file
+}
+
+export interface FileRisk {
+  filePath: string;
+  riskScore: number;
+  reasons: string[];
+  suggestedTests: string[];
+}
+
+export interface PredictRiskResult {
+  items: FileRisk[];
+}
 
 export interface RunParams {
   root: string;

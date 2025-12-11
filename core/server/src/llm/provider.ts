@@ -4,41 +4,39 @@ import type {
 } from "../../../llm/llm-types";
 import { predictRiskMock } from "./mockPredictor";
 
-// The provider currently in use defaults to a mock implementation.
-let currentProvider: (
-  input: PredictionInput
-) => Promise<PredictionResult> = predictRiskMock;
+// Type definition of LLM provider
+export type LLMProvider = (input: PredictionInput) => Promise<PredictionResult>;
+
+// The provider currently in use (defaults a mock implementation).
+let currentProvider: LLMProvider = predictRiskMock;
 
 /**
  * Invoked externally to replace the current provider 
  * with a real LLM implementation.
  */
-export function registerLLMProvider(
-  provider: (input: PredictionInput) => Promise<PredictionResult>
-): void {
-  // Defensive handling: avoid passing undefined/null to break the system
-  if (provider) {
-    currentProvider = provider;
-  } else {
-    currentProvider = predictRiskMock;
-  }
+export function registerLLMProvider(provider: LLMProvider) {
+  currentProvider = provider;
 }
 
 /**
- * All LLM prediction calls inside the server go through this function.
- *
- * By default, it uses the mock.
- * If it is injected via registerLLMProvider,it uses the real LLM.
+ * get the current provider.(for internal use)
+ */
+export function getCurrentLLMProvider():LLMProvider {
+  return currentProvider;
+}
+
+/**
+ * Unified external API entry point.
+ * All server components inovke this function instead of others, avoiding 
+ * direct dependencies on concrete LLM implementations.
+ * @param input 
+ * @returns 
  */
 export async function predictWithLLM(
   input: PredictionInput
 ): Promise<PredictionResult> {
-  return currentProvider(input);
+  const provider = getCurrentLLMProvider();
+  return provider(input);
 }
 
-/**
- * export the current provider.
- */
-export function getCurrentLLMProvider() {
-  return currentProvider;
-}
+
