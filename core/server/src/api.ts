@@ -1,7 +1,12 @@
 import { Connection } from 'vscode-languageserver';
+
+import {getChangedFiles, getFileDiff} from './git/getDiffs';
+
 import { Methods, RunParams, RunResult, 
   SymbolGraphParams, SymbolGraphResult, SymbolNode, SymbolEdge,
-  PredictRiskParams, PredictRiskResult } from './protocol';
+  PredictRiskParams, PredictRiskResult, 
+  GitDiffParams, GitDiffFile, GitDiffResult
+} from './protocol';
 import {handlePredictRisk} from './analysis/predictRiskHandler';
 import { analyzeProject } from './analyzer';
 import { parseTSFile } from './parse_ts';
@@ -58,4 +63,18 @@ export function registerApi(connection: Connection) {
     async (params: PredictRiskParams): Promise<PredictRiskResult> => {
       return handlePredictRisk(params);
   });
+
+  connection.onRequest(
+    Methods.GitDiff,
+    async (params: GitDiffParams): Promise<GitDiffResult> => {
+      const files = getChangedFiles(params.workspaceRoot);
+
+      const result:GitDiffFile[] = files.map(f => ({
+        filePath: f,
+        diff: getFileDiff(params.workspaceRoot, f)
+      }));
+      return {files: result};
+    }
+  );
+  
 }

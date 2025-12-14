@@ -5,7 +5,21 @@ export const Methods = {
   RunAnalysis: 'impact/runAnalysis',
   SymbolGraph: 'impact/symbolGraph',
   PredictRisk: 'impact/predictRisk',
-} as const;
+  GitDiff: 'impact/gitDiff',
+};
+
+export interface GitDiffParams {
+  workspaceRoot: string;
+}
+
+export interface GitDiffFile {
+  filePath: string;
+  diff: string;
+}
+
+export interface GitDiffResult {
+  files: GitDiffFile[];
+}
 
 export interface PredictRiskParams {
   workspaceRoot?: string;

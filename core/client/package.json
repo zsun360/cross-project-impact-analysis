@@ -19,7 +19,13 @@
       },
       {
         "command": "impact.predictRiskForActiveFile",
-        "title": "Predict Risk For Active File"
+        "title": "Predict Risk For Active File",
+        "category": "Impact"
+      },
+      {
+        "command": "impact.gitDiff",
+        "title": "Impact: Show Git Diff",
+        "category": "Impact"
       }
     ]
   },

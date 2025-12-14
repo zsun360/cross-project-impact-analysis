@@ -1,8 +1,3 @@
-/* --------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- * ------------------------------------------------------------------------------------------ */
-
 import {
   window,
   ExtensionContext,
@@ -22,6 +17,7 @@ import * as fs from 'fs';
 
 import { setClient } from './utils/lspClientApi';
 import { registerCommands } from './commands/register';
+import {registerGitDiffCommand} from './commands/gitDiff';
 
 let client: LanguageClient;
 let output: OutputChannel;
@@ -81,6 +77,8 @@ export async function activate(context: ExtensionContext) {
 
   // Register commands (e.g., Impact: Show Import Graph)
   registerCommands(context, output);
+
+  registerGitDiffCommand(output);
 
   // Optional: show ready info
   window.setStatusBarMessage('Impact Analysis: ready', 3000);

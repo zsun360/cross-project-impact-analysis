@@ -7,6 +7,6 @@ export function setClient(client: LanguageClient) {
 }
 
 export function getClient(): LanguageClient {
-  if (!_client) {throw new Error('LanguageClient not initialized. Call setClient() in activate().');}
+  if (!_client) { throw new Error('LanguageClient not initialized. Call setClient() in activate().'); }
   return _client;
 }
