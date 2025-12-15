@@ -18,8 +18,8 @@
         "category": "Impact"
       },
       {
-        "command": "impact.predictRiskForActiveFile",
-        "title": "Predict Risk For Active File",
+        "command": "impact.predictRisk",
+        "title": "Predict Risk For Git ChangedSet",
         "category": "Impact"
       },
       {

@@ -125,17 +125,10 @@ export function registerCommands(
 
   context.subscriptions.push(
     commands.registerCommand(
-      'impact.predictRiskForActiveFile',
+      'impact.predictRisk',
       async () => {
         const client = getClient();
-        const editor = window.activeTextEditor;
 
-        if (!editor) {
-          window.showWarningMessage('No active editor.');
-          return;
-        }
-
-        const filePath = editor.document.uri.fsPath;
         const folders = workspace.workspaceFolders;
         if (!folders || folders.length == 0) {
           window.showWarningMessage('No workspace folder found.');
@@ -145,7 +138,6 @@ export function registerCommands(
 
         const params: PredictRiskParams = {
           workspaceRoot,
-          changedFiles: [filePath],
         };
 
         let result: PredictRiskResult;
@@ -165,26 +157,25 @@ export function registerCommands(
         // Use OutputChannel to display the results
         output.appendLine('');
         output.appendLine(
-          `=== LLM Risk Prediction for ${path.basename(filePath)} ===`
+          `=== LLM Risk Prediction for ${path.basename(workspaceRoot)} ===`
         );
-        for (const item of result.items) {
-          output.appendLine(`File: ${item.filePath}`);
-          output.appendLine(
-            ` Risk score: ${(item.riskScore * 100).toFixed(1)}%`,);
-          if (item.reasons.length > 0) {
-            output.appendLine('    Reasons:');
-            for (const r of item.reasons) {
-              output.appendLine(`    - ${r}`);
-            }
+
+        output.appendLine(
+          ` Risk score: ${(result.riskScore * 100).toFixed(1)}%`,);
+        if (result.reasons.length > 0) {
+          output.appendLine('    Reasons:');
+          for (const r of result.reasons) {
+            output.appendLine(`    - ${r}`);
           }
-          if (item.suggestedTests.length > 0) {
-            output.appendLine('    Suggested tests:');
-            for (const t of item.suggestedTests) {
-              output.appendLine(`    - ${t}`);
-            }
-          }
-          output.appendLine('');
         }
+        if (result.suggestedTests.length > 0) {
+          output.appendLine('    Suggested tests:');
+          for (const t of result.suggestedTests) {
+            output.appendLine(`    - ${t}`);
+          }
+        }
+        output.appendLine('');
+  
         output.show(true);
       }
     )

@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /**
- * Stage 06 - Multi_Lang_AST_Import_Graph
  * - Supports language: 'auto' | 'python' | 'js' | 'ts'
  *   - 'auto' scans both Python (*.py) and JS/TS (*.js,*.jsx,*.ts,*.tsx)
  *   - Python parser: Python ast

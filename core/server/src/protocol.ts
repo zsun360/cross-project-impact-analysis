@@ -23,18 +23,12 @@ export interface GitDiffResult {
 
 export interface PredictRiskParams {
   workspaceRoot?: string;
-  changedFiles: string[]; // Stage 1: We only pass one active file
-}
-
-export interface FileRisk {
-  filePath: string;
-  riskScore: number;
-  reasons: string[];
-  suggestedTests: string[];
 }
 
 export interface PredictRiskResult {
-  items: FileRisk[];
+  riskScore: number;
+  reasons: string[];
+  suggestedTests: string[];
 }
 
 export interface RunParams {

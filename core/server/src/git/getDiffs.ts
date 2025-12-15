@@ -1,5 +1,5 @@
 import * as cp from "child_process";
-import * as path from "path";
+// import * as path from "path";
 
 export function getChangedFiles(workspaceRoot: string): string[] {
   try {
