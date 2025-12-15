@@ -18,7 +18,7 @@ export interface AnalyzeStats {
  * Analyze project and return a list of ModuleIR (TS/JS/PY),
  * using AST-based parsers and an in-memory cache.
  *
- * This is Stage 06 core: multi-lang + AST.
+ * multi-lang + AST.
  */
 export async function analyzeProject(
 	root: string,

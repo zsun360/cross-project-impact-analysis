@@ -8,7 +8,7 @@ import { Methods, SymbolGraphParams, SymbolGraphResult } from '../protocol';
 // Webview host with message bridge
 
 /**
-+ * GraphPanel (Stage 05)
++ * GraphPanel
 + * - Keeps ready-handshake
 + * - Adds safe 'openInEditor' handling: only open when id resolves to an existing local file
 +*/

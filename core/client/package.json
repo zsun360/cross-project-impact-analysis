@@ -34,7 +34,7 @@
       "impact.maxFiles": {
         "type": "number",
         "default": 200,
-        "description": "Maximum files to analyze in Stage05."
+        "description": "Maximum files to analyze."
       }
     }
   },
