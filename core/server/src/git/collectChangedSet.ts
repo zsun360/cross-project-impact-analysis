@@ -1,4 +1,5 @@
 import {getChangedFiles, getFileDiff} from './getDiffs';
+import type {DiffMode} from '../protocol';
 import {ChangedSet, ChangedBlob} from '../../../llm/llm-types';
 
 /**
@@ -21,31 +22,34 @@ function splitDiffIntoChunks(diff: string): string[] {
 
 export function collectChangedSet(
 	workspaceRoot: string, 
-	opts: {maxFiles?:number; maxChunksPerFile?: number;maxCharsPerChunk?:number} = {}
+	opts: {diffMode?: DiffMode; maxFiles?:number; 
+		maxChunksPerFile?: number;maxCharsPerChunk?:number} = {}
 ): ChangedSet {
 	const {
+		diffMode = 'working',
 		maxFiles = 20,
 		maxChunksPerFile = 10,
 		maxCharsPerChunk = 1200,
 	} = opts;
 
-	const changed = getChangedFiles(workspaceRoot).slice(0, maxFiles);
+	const changed = getChangedFiles(workspaceRoot, diffMode).slice(0, maxFiles);
 
 	const blobs: ChangedBlob[] = [];
 
 	for (const relPath of changed) {
-		const raw = getFileDiff(workspaceRoot, relPath);
+		const raw = getFileDiff(workspaceRoot, relPath, diffMode);
 		if (!raw || raw.trim().length === 0) {continue;}
 
 		const chunks = splitDiffIntoChunks(raw);
 		
 		if (chunks.length === 0) {continue;}
 		// maximum chunks per file
-		chunks.slice(0, maxChunksPerFile).map(ch => 
-			ch.length > maxCharsPerChunk ? ch.slice(0, maxCharsPerChunk) + "\n...<truncated>": ch
+		const limitedChunks = chunks.slice(0, maxChunksPerFile).map(ch => 
+			ch.length > maxCharsPerChunk 
+			? ch.slice(0, maxCharsPerChunk) + "\n...<truncated>": ch
 		);
 
-		blobs.push({'path': relPath, 'chunks': chunks});
+		blobs.push({'path': relPath, 'chunks': limitedChunks});
 	}
 	return {blobs};
 }

@@ -10,7 +10,7 @@ import {
 import * as path from 'path';
 
 import { Methods, RunParams, RunResult, 
-  PredictRiskParams, PredictRiskResult } from '../protocol';
+  PredictRiskParams, PredictRiskResult, DiffMode } from '../protocol';
 import { getClient } from '../utils/lspClientApi';
 import { GraphPanel } from '../panel/GraphPanel';
 import { GraphModel } from '../types/graph';
@@ -136,8 +136,11 @@ export function registerCommands(
         }
         const workspaceRoot = folders[0].uri.fsPath;
 
+        const diffMode = workspace.getConfiguration('impact').get<DiffMode>('diffMode', 'staged');
+        
         const params: PredictRiskParams = {
           workspaceRoot,
+          diffMode,
         };
 
         let result: PredictRiskResult;

@@ -15,6 +15,7 @@ export async function handlePredictRisk(
 	? params.workspaceRoot : process.cwd();
 
 	const changedSet = collectChangedSet(workspaceRoot, {
+		diffMode: params.diffMode,
 		maxFiles: 20,
 		maxChunksPerFile: 10,
 		maxCharsPerChunk: 1200,

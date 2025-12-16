@@ -78,7 +78,7 @@ export async function activate(context: ExtensionContext) {
   // Register commands (e.g., Impact: Show Import Graph)
   registerCommands(context, output);
 
-  registerGitDiffCommand(output);
+  registerGitDiffCommand(context, output);
 
   // Optional: show ready info
   window.setStatusBarMessage('Impact Analysis: ready', 3000);

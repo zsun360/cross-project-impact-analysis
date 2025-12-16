@@ -8,8 +8,11 @@ export const Methods = {
   GitDiff: 'impact/gitDiff',
 };
 
+export type DiffMode = "working" | "staged";
+
 export interface GitDiffParams {
   workspaceRoot: string;
+  diffMode?: DiffMode;
 }
 
 export interface GitDiffFile {
@@ -23,6 +26,7 @@ export interface GitDiffResult {
 
 export interface PredictRiskParams {
   workspaceRoot?: string;
+  diffMode?: DiffMode;
 }
 
 export interface PredictRiskResult {

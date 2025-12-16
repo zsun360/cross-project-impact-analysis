@@ -10,7 +10,8 @@
     "commands": [
       {
         "command": "impact.exportGraphPng",
-        "title": "Impact: Export Graph (PNG)"
+        "title": "Export Graph (PNG)",
+        "category": "Impact"
       },
       {
         "command": "impact.runAnalysis",
@@ -24,17 +25,26 @@
       },
       {
         "command": "impact.gitDiff",
-        "title": "Impact: Show Git Diff",
+        "title": "Show Git Diff",
         "category": "Impact"
       }
-    ]
-  },
-  "configuration": {
-    "properties": {
-      "impact.maxFiles": {
-        "type": "number",
-        "default": 200,
-        "description": "Maximum files to analyze."
+    ],
+    "configuration": {
+      "properties": {
+        "impact.maxFiles": {
+          "type": "number",
+          "default": 200,
+          "description": "Maximum files to analyze."
+        },
+        "impact.diffMode": {
+          "type": "string",
+          "enum": [
+            "working",
+            "staged"
+          ],
+          "default": "working",
+          "description": "Git diff mode for gitDiff/predictRisk: working (unstaged) or staged (--cached)."
+        }
       }
     }
   },

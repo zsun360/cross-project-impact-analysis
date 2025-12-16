@@ -67,11 +67,12 @@ export function registerApi(connection: Connection) {
   connection.onRequest(
     Methods.GitDiff,
     async (params: GitDiffParams): Promise<GitDiffResult> => {
-      const files = getChangedFiles(params.workspaceRoot);
+      const diffMode = params.diffMode ?? 'working';
+      const files = getChangedFiles(params.workspaceRoot, diffMode);
 
       const result:GitDiffFile[] = files.map(f => ({
         filePath: f,
-        diff: getFileDiff(params.workspaceRoot, f)
+        diff: getFileDiff(params.workspaceRoot, f, diffMode)
       }));
       return {files: result};
     }

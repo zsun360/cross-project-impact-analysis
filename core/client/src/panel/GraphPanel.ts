@@ -7,12 +7,9 @@ import { Methods, SymbolGraphParams, SymbolGraphResult } from '../protocol';
 
 // Webview host with message bridge
 
-/**
-+ * GraphPanel
-+ * - Keeps ready-handshake
-+ * - Adds safe 'openInEditor' handling: only open when id resolves to an existing local file
-+*/
-
+/** GraphPanel
+ * Keeps ready-handshake
+ */
 export class GraphPanel {
   public static current: GraphPanel | undefined;
   private readonly panel: vscode.WebviewPanel;

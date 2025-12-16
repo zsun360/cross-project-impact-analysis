@@ -1,34 +1,40 @@
-import {commands, window, workspace, OutputChannel } from 'vscode';
-import {Methods, GitDiffParams, GitDiffResult} from '../protocol';
-import {getClient} from '../utils/lspClientApi';
+import { commands, window, workspace, OutputChannel, ExtensionContext } from 'vscode';
+import { Methods, GitDiffParams, GitDiffResult, DiffMode } from '../protocol';
+import { getClient } from '../utils/lspClientApi';
 
-export function registerGitDiffCommand(output: OutputChannel) {
-	commands.registerCommand('impact.gitDiff', async () => {
-		const client = getClient();
-		const folder = workspace.workspaceFolders?.[0];
+export function registerGitDiffCommand(
+	context: ExtensionContext,
+	output: OutputChannel) {
+	context.subscriptions.push(
+		commands.registerCommand('impact.gitDiff', async () => {
+			const client = getClient();
+			const folder = workspace.workspaceFolders?.[0];
 
-		if (!folder) {
-			window.showErrorMessage("No workspace folder.");
-			return;
-		}
+			if (!folder) {
+				window.showErrorMessage("No workspace folder.");
+				return;
+			}
 
-		const params: GitDiffParams = {
-			workspaceRoot: folder.uri.fsPath
-		};
+			const diffMode = workspace.getConfiguration("impact").get<DiffMode>('diffMode', 'staged');
 
-		const result = await client.sendRequest<GitDiffResult>(
-			Methods.GitDiff,
-			params
-		);
+			const params: GitDiffParams = {
+				workspaceRoot: folder.uri.fsPath,
+				diffMode,
+			};
 
-		output.appendLine("=== Git Diff Demo ===");
+			const result = await client.sendRequest<GitDiffResult>(
+				Methods.GitDiff,
+				params
+			);
 
-		for (const f of result.files) {
-			output.appendLine(`File: ${f.filePath}`);
-			output.appendLine(f.diff);
-			output.appendLine("");
-		}
+			output.appendLine("=== Git Diff Demo ===");
 
-		output.show(true);
-	});
+			for (const f of result.files) {
+				output.appendLine(`File: ${f.filePath}`);
+				output.appendLine(f.diff);
+				output.appendLine("");
+			}
+
+			output.show(true);
+		}));
 }

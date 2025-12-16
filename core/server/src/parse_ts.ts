@@ -4,14 +4,12 @@ import * as fs from 'fs';
 import { ModuleIR, ImportEntry, ExportEntry } from './types/ir';
 
 export async function parseTSFile(file: string,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   workspaceRoot?: string): Promise<ModuleIR> {
   const start = Date.now();
 
-  // 如果 workspaceRoot 存在且是绝对路径，就作为路径拼接基准，否则回退到文件所在目录
-  const rootDir =
-    workspaceRoot && path.isAbsolute(workspaceRoot)
-      ? workspaceRoot
-      : path.dirname(file);
+  // Resolve relative imports from the current file directory.
+  const fileDir = path.dirname(file);
 
   const project = new Project({ skipAddingFilesFromTsConfig: true });
   const source = project.addSourceFileAtPath(file);
@@ -29,7 +27,7 @@ export async function parseTSFile(file: string,
 
     const base = path.isAbsolute(spec)
       ? spec
-      : path.resolve(rootDir, spec);
+      : path.resolve(fileDir, spec);
 
     const isFile = (p: string): boolean =>
       fs.existsSync(p) && fs.statSync(p).isFile();
