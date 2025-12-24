@@ -1,139 +1,87 @@
-# Cross-Project Impact Analyzer for VS Code
+# Cross-Project Impact Analysis (CPIA) — VS Code Extension
 
-> Analyze the ripple effect of code changes across large-scale projects — visualize dependencies, assess risks, and improve code quality.
+CPIA helps you **visualize cross-file relationships** in a codebase by building an **explainable dependency graph** and a **symbol-level (AST-based) index**.
 
-## 🔍 Overview
+![Dependency Graph](docs/assets/dependency-graph.png)
 
-In large codebases, even a small change in one function or module can trigger unexpected side effects across the project.  
-This VS Code extension helps developers **identify the full impact of code changes**, **visualize dependency graphs**, and **evaluate risk levels** — all directly within the IDE.
+**MVP today**
+- Generates a **file-level dependency graph** (e.g., imports/requires) for quick cross-file understanding.
+- Builds a **symbol-level index** (AST-based) to support “where is this defined/used?” style navigation.
+- Ships as a **VS Code extension** with a repeatable workflow: scan → build graph → visualize.
 
-## ✨ Core Features
-
-- 🧩 **Change Impact Analysis** — Detect which functions, files, or modules are affected by a given modification.
-- 🔗 **Dependency Graph Visualization** — Interactive, zoomable graph of function and module relationships (powered by D3.js / Cytoscape).
-- ⚙️ **Cross-Project & Multi-Module Support** — Handles monorepos, microservices, or multi-language workspaces.
-- 🧠 **Risk Evaluation** — Quantifies potential impact using complexity, dependency spread, and commit history.
-- 🕵️ **Git Integration** — Automatically links commits and diffs to affected symbols.
-- 📄 **Exportable Reports** — Generate detailed HTML/PDF summaries for team reviews.
-
-## 🏗️ Architecture
-
-The system follows a client–server model based on the Language Server Protocol (LSP).
-
-## 🚀 Getting Started
-
-1. Clone this repository.
-2. Run `npm install` in both `extension/` and `server/` directories.
-3. Press `F5` in VS Code to launch the extension in a new window.
-
-### Commands
-
-- `Impact: Build Index` — Analyze workspace files and build dependency index.
-- `Impact: Analyze Selection` — Run impact analysis for selected function.
-- `Impact: Show Graph` — Visualize dependency graph.
-- `Impact: Export Report` — Generate PDF summary.
-
-## 🧩 Technical Highlights
-
-- **AST-based analysis** — Parses code structure instead of regex scanning.
-- **Custom LSP integration** — Enables scalable, non-blocking analysis.
-- **Cross-language support** — Built to extend from JS/TS to Python and Java.
-- **Graph database model** — Efficient dependency traversal and querying.
-- **Risk scoring engine** — Combines code complexity, dependency breadth, and commit churn.
-- **Optimized Webview visualization** — Large graphs rendered with progressive layout.
-
-## 👤 Author
-
-**Zhenshuo Sun**  
-📍 Based in Thunder Bay, Ontario, Canada  
-💼 Software Engineering Student @ Lakehead University  
-🌐 Focus: Full-Stack + Cloud + AI-Assisted Developer Tools  
-📧 Contact: [ zsun360@outlook.com or zsun30@lakeheadu.ca ]
-
-
-# Cross-Project Impact Analysis — Learning Map
-
-> 🧭 A step-by-step VS Code extension project that grows from a basic Language Server setup to full-featured code impact visualization.
+> Public repo focus: **structured documentation**, **reliable deliverables**, **iterative milestones**.
 
 ---
 
-## 🚀 Quick Start
-- Recommended learning order: **Stage 01 → Stage 02 → Stage 03**
-- Each stage is *self-contained* with its own README, runnable sample, and screenshots.
+## What you get (in 30 seconds)
+- A clear **dependency graph** to see how files/modules connect.
+- A practical foundation for **cross-file code comprehension** and future analysis extensions.
 
 ---
 
-## 🗺️ Learning Map
+## Quick Start (Developer Mode)
+> Fastest way to try CPIA is running it in VS Code’s Extension Development Host.
 
-### Stage 01 — Scaffolding & Baseline (LSP Sample Setup)
-- **Goal:** Set up Microsoft’s official LSP sample locally and understand the Client–Server architecture.  
-- **What you’ll learn:** How to run, debug, and inspect LSP communications.  
-- **Open tutorial:** [`stage_01_scaffolding/README.md`](./stage_01_scaffolding/README.md)  
-- **Try the code:** `stage_01_scaffolding/`  
-- **Release tag:** `v0.1.0-scaffold`  
-- **Preview:** *(add screenshot later)*  
+### Prerequisites
+- VS Code
+- Node.js (LTS recommended)
+- Git (optional, but recommended)
 
----
+### Run locally
+1. Clone:
+   ```bash
+   git clone https://github.com/zsun360/cross-project-impact-analysis.git
+   cd cross-project-impact-analysis
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Build / compile (use what exists in your repo):
+   ```bash
+   npm run build
+   ```
+   If `build` is not defined, try:
+   ```bash
+   npm run compile
+   ```
+4. Launch the extension:
+   - Open the repo in VS Code
+   - Press **F5** to open the **Extension Development Host**
+5. In the Dev Host:
+   - Open a workspace (any Git repo / sample project)
+   - Open Command Palette: `Cmd/Ctrl + Shift + P`
+   - Search **“CPIA”** (or **“Impact”**) and run the available graph commands
 
-### Stage 02 — Ping Server & Webview (Minimum Working Path)
-- **Goal:** Establish a minimal end-to-end communication path: Client ↔ Server ↔ Webview.  
-- **What you’ll learn:** Custom LSP requests, message channels, and creating a Webview.  
-- **Open tutorial:** [`stage_02_ping_server_and_webview/README.md`](./stage_02_ping_server_and_webview/README.md)  
-- **Try the code:** `stage_02_ping_server_and_webview/`  
-- **Release tag:** `v0.2.0-ping-webview`  
-- **Preview:** *(add screenshot later)*  
-
----
-
-### Stage 03 — Cytoscape Static Graph (Mock Data)
-- **Goal:** Render a static dependency graph using Cytoscape in the Webview.  
-- **What you’ll learn:** Webview–LSP data flow, Cytoscape basics, and event callbacks.  
-- **Open tutorial:** [`stage_03_cytoscape_static/README.md`](./stage_03_cytoscape_static/README.md)  
-- **Try the code:** `stage_03_cytoscape_static/`  
-- **Release tag:** `v0.3.0-static`  
-- **Preview:** *(add screenshot later)*  
-
----
-
-## 📦 Repository Layout
-```
-stage_01_scaffolding/
-stage_02_ping_server_and_webview/
-stage_03_cytoscape_static/
-shared/
-```
-Each stage can run independently inside VS Code.
+> Tip: If your repo is multi-root (client/server folders), run `npm install` in each folder that contains a `package.json`.
 
 ---
 
-## 🧭 Versioning & Navigation
-- Each milestone is tagged for reproducibility:  
-  `v0.1.0-scaffold`, `v0.2.0-ping-webview`, `v0.3.0-static`  
-- To explore a specific version:
-  ```bash
-  git checkout tags/v0.2.0-ping-webview
-  ```
+## How it works (high level)
+1. **Scan workspace**: locate source files and resolve module/import relations.
+2. **Build graphs**:
+   - File-level dependency graph (module relationships)
+   - Symbol-level index (AST-based) for code structure
+3. **Visualize**: render graphs in VS Code (Webview).
 
 ---
 
-## 🧩 Project Vision
-This project demonstrates how a **Language Server + Webview** architecture can evolve into a **cross-project code impact analysis tool**.  
-Future stages (04–05) will introduce real dependency parsing, symbol graphs, and drill-down visualization.
+## Roadmap (public)
+- Better language coverage and import-resolution edge cases
+- More graph UX polish (filters, search, grouping)
+- Testing + CI for stable contributions
 
 ---
 
-## 🏷️ Metadata
-| Field | Value |
-| --- | --- |
-| Repository | Cross-Project Impact Analysis VS Code Extension |
-| Author | Zhenshuo Sun (zsun360) |
-| Category | AI + Developer Tools |
-| Language | TypeScript / Node.js |
-| License | MIT |
+## Repo Structure (at a glance)
+- `core/` — VS Code extension components
+- `server/` — analysis pipeline (scan, parse, graph build)
+- `docs/` — screenshots and documentation
 
 ---
 
-## 📚 References
-- [VS Code Extension API](https://code.visualstudio.com/api)
-- [Language Server Protocol Spec](https://microsoft.github.io/language-server-protocol/)
-- [Cytoscape.js](https://js.cytoscape.org/)
+## Contributing
+Issues and PRs are welcome. For bugs, please include:
+- OS + VS Code version
+- steps to reproduce
+- expected vs actual behavior
